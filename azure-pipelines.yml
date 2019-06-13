@@ -18,14 +18,14 @@ steps:
   inputs:
     azureSubscription: 'aml_service_principal_connection'
     scriptLocation: inlineScript
-    inlineScript: 'az ml folder attach -w build-2019-demo -g scottgu-all-hands'
+    inlineScript: 'az ml folder attach -w aml -g databricks-au'
 
 - task: AzureCLI@1
   displayName: 'Create compute for training'
   inputs:
     azureSubscription: 'aml_service_principal_connection'
     scriptLocation: inlineScript
-    inlineScript: 'az ml computetarget create amlcompute -n cpu --vm-size STANDARD_D2_V2 --max-nodes 4'
+    inlineScript: 'az ml computetarget create amlcompute -n cpu --vm-size STANDARD_D2_V2 --max-nodes 2'
   
 - task: AzureCLI@1
   displayName: 'Submit script run'
@@ -54,3 +54,10 @@ steps:
     azureSubscription: 'aml_service_principal_connection'
     scriptLocation: inlineScript
     inlineScript: 'az ml service delete -n acicicd'
+
+- task: AzureCLI@1
+  displayName: 'Delete training compute'
+  inputs:
+    azureSubscription: 'aml_service_principal_connection'
+    scriptLocation: inlineScript
+    inlineScript: 'az ml computetarget delete -n cpu'
